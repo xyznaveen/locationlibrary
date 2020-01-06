@@ -92,26 +92,12 @@ class GeoCode(private val context: Context) {
         val sb = StringBuilder()
         val delim = ", "
 
-        if (isNotNull(address.locality)) {
+        address.locality?.let { sb.append(it) }
+        address.subLocality?.let { sb.append(delim).append(it) }
+        address.thoroughfare?.let { sb.append(delim).append(it) }
 
-            sb.append(address.locality)
-        }
-
-        if (isNotNull(address.subLocality)) {
-
-            sb.append(delim)
-            sb.append(address.subLocality)
-        }
-
-        if (isNotNull(address.thoroughfare)) {
-
-            sb.append(delim)
-            sb.append(address.thoroughfare)
-        }
-
-        val tempAddressLine = address.getAddressLine(0)
-        if (sb.toString().isBlank() && isNotNull(tempAddressLine)) {
-            sb.append(tempAddressLine.substringBeforeLast(','))
+        address.getAddressLine(0)?.takeIf { !it.isBlank() }?.let {
+            sb.append(it.substringBeforeLast(delim))
         }
 
         return sb.toString()
