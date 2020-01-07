@@ -2,6 +2,7 @@ package np.com.naveenniraula.locationlibrary
 
 import android.app.Application
 import android.app.PendingIntent
+import android.location.Location
 import android.util.Log
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
 import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeocodingCompleteCallback
@@ -68,6 +69,15 @@ class LocationLibrary {
             callback: ReverseGeocodingCompleteCallback
         ): ReverseGeocoder {
             val pair = Pair(Pair(lat, lon), callback)
+            toBeReverseGeocoded.add(pair)
+            return this
+        }
+
+        fun add(
+            location: Location,
+            callback: ReverseGeocodingCompleteCallback
+        ): ReverseGeocoder {
+            val pair = Pair(Pair(location.latitude, location.longitude), callback)
             toBeReverseGeocoded.add(pair)
             return this
         }
