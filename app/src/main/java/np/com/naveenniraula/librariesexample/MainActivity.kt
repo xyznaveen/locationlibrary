@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import np.com.naveenniraula.locationlibrary.LocationLibrary
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
 import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeocodingCompleteCallback
+import np.com.naveenniraula.locationlibrary.util.LocationUtil
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
@@ -89,37 +90,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         val rgc = LocationLibrary.ReverseGeocoder(application)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
-        rgc.add(27.69792, 80.30278, reverseGeocodingCompleteCallback)
+        LocationUtil.getLocations(1000, 20_00_000).forEach {
+            rgc.add(it.latitude, it.longitude, reverseGeocodingCompleteCallback)
+        }
         rgc.work()
 
     }
