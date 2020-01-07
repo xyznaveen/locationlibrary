@@ -6,7 +6,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import np.com.naveenniraula.locationlibrary.util.LogUtil
+
 
 class LocationIntentService(name: String = "LocationIntentService") : IntentService(name) {
 
@@ -22,6 +24,13 @@ class LocationIntentService(name: String = "LocationIntentService") : IntentServ
 
     override fun onHandleIntent(intent: Intent?) {
         LogUtil.d("LocationIntentService", "we have intent $intent")
+
+        val it = Intent("CUSTOM_ACTION")
+        it.putExtra("test", "this data works as expected.")
+
+        val localBroadcastManager: LocalBroadcastManager =
+            LocalBroadcastManager.getInstance(this)
+        localBroadcastManager.sendBroadcast(it)
     }
 
     companion object {

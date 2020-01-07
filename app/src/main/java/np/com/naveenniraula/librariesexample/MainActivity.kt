@@ -1,11 +1,16 @@
 package np.com.naveenniraula.librariesexample
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import np.com.naveenniraula.locationlibrary.LocationLibrary
@@ -26,6 +31,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         setSupportActionBar(toolbar)
 
         checkAndRequestPermission()
+
+        val br = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Timber.d("we have received broadcast : ${intent?.getStringExtra("test")}")
+            }
+        }
+
+        val lbm = LocalBroadcastManager.getInstance(this)
+        lbm.registerReceiver(br, IntentFilter("CUSTOM_ACTION"))
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

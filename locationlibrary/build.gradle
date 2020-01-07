@@ -39,5 +39,6 @@ dependencies {
     def play_services_maps = "17.0.0"
     implementation "com.google.android.gms:play-services-location:$play_services_location"
     implementation "com.google.android.gms:play-services-maps:$play_services_maps"
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
 
 }
