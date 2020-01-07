@@ -5,7 +5,8 @@ import android.app.PendingIntent
 import android.location.Location
 import android.util.Log
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
-import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeocodingCompleteCallback
+import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeoCodeCompleteCallback
+import np.com.naveenniraula.locationlibrary.data.ReverseGeoCodeModel
 import np.com.naveenniraula.locationlibrary.internal.GeoCode
 import np.com.naveenniraula.locationlibrary.internal.LocationHelper
 
@@ -42,23 +43,24 @@ class LocationLibrary {
         private var currentIndex = 0
 
         private val toBeReverseGeocoded =
-            arrayListOf<Pair<Pair<Double, Double>, ReverseGeocodingCompleteCallback>>()
+            arrayListOf<Pair<Pair<Double, Double>, ReverseGeoCodeCompleteCallback>>()
 
         private val gc = GeoCode(application)
         private val reverseGeocodingCompleteListener: GeoCode.ReverseGeocodingCompleteListener =
             object : GeoCode.ReverseGeocodingCompleteListener {
-                override fun onAddressResolved(address: String, lat: Double, lon: Double) {
-                    val currentPair = toBeReverseGeocoded[currentIndex]
-                    currentPair.second.onGeocodingComplete(address, Pair(lat, lon))
 
-                    Log.d("ReverseGeocoder", "we have result for $currentIndex $address")
+                override fun onOperationComplete(reverseGeoCodeModel: ReverseGeoCodeModel) {
+                    val currentPair = toBeReverseGeocoded[currentIndex]
+                    currentPair.second.onGeoCodeComplete(reverseGeoCodeModel)
+
+                    Log.d("ReverseGeocoder", "we have result for $currentIndex $reverseGeoCodeModel")
 
                     ++currentIndex
                     doResolve()
                 }
             }
 
-        fun add(pair: Pair<Pair<Double, Double>, ReverseGeocodingCompleteCallback>): ReverseGeocoder {
+        fun add(pair: Pair<Pair<Double, Double>, ReverseGeoCodeCompleteCallback>): ReverseGeocoder {
             toBeReverseGeocoded.add(pair)
             return this
         }
@@ -66,7 +68,7 @@ class LocationLibrary {
         fun add(
             lat: Double,
             lon: Double,
-            callback: ReverseGeocodingCompleteCallback
+            callback: ReverseGeoCodeCompleteCallback
         ): ReverseGeocoder {
             val pair = Pair(Pair(lat, lon), callback)
             toBeReverseGeocoded.add(pair)
@@ -75,14 +77,14 @@ class LocationLibrary {
 
         fun add(
             location: Location,
-            callback: ReverseGeocodingCompleteCallback
+            callback: ReverseGeoCodeCompleteCallback
         ): ReverseGeocoder {
             val pair = Pair(Pair(location.latitude, location.longitude), callback)
             toBeReverseGeocoded.add(pair)
             return this
         }
 
-        fun resolve(pair: Pair<Pair<Double, Double>, ReverseGeocodingCompleteCallback>) {
+        fun resolve(pair: Pair<Pair<Double, Double>, ReverseGeoCodeCompleteCallback>) {
 
             val toResolve = pair.first
             val callback = pair.second

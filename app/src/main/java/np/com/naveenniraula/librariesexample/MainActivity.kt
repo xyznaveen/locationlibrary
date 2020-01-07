@@ -10,7 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import np.com.naveenniraula.locationlibrary.LocationLibrary
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
-import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeocodingCompleteCallback
+import np.com.naveenniraula.locationlibrary.callbacks.ReverseGeoCodeCompleteCallback
+import np.com.naveenniraula.locationlibrary.data.ReverseGeoCodeModel
 import np.com.naveenniraula.locationlibrary.util.LocationUtil
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -83,14 +85,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
             }).build().start()
 
-        val reverseGeocodingCompleteCallback = object : ReverseGeocodingCompleteCallback {
-            override fun onGeocodingComplete(address: String, latLon: Pair<Double, Double>) {
-                Timber.d("we have successfully completed this. $latLon $address")
+        val reverseGeocodingCompleteCallback = object : ReverseGeoCodeCompleteCallback {
+            override fun onGeoCodeComplete(reverseGeoCodeModel: ReverseGeoCodeModel) {
+                Timber.d("we have successfully completed this. $reverseGeoCodeModel")
             }
         }
 
         val rgc = LocationLibrary.ReverseGeocoder(application)
-        LocationUtil.getLocations(1000, 20_00_000).forEach {
+        LocationUtil.getLocations(10, 20_00_000).forEach {
             rgc.add(it.latitude, it.longitude, reverseGeocodingCompleteCallback)
         }
         rgc.work()

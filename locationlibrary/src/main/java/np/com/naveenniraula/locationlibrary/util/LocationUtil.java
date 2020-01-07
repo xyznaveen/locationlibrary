@@ -7,6 +7,14 @@ import java.util.Random;
 
 public class LocationUtil {
 
+    /**
+     * Generates a random point withing the provided radius of the provided location.
+     *
+     * @param radiusInMeters  area up to where the location must be generated.
+     * @param currentLocation current point of reference for the radiusInMeters
+     * @return new random location within the specified constraint.
+     * @see Location
+     */
     public static Location getLocationInLatLngRad(double radiusInMeters, Location currentLocation) {
         double x0 = currentLocation.getLongitude();
         double y0 = currentLocation.getLatitude();
@@ -40,11 +48,19 @@ public class LocationUtil {
         return copy;
     }
 
+    /**
+     * Generates the provided amount of random locations within the provided range.
+     *
+     * @param amountToGenerate total number of locations to be generated.
+     * @param radiusInMeters   area up to where the location must be generated.
+     * @return ArrayList of new locations.
+     * @see LocationUtil
+     */
     public static ArrayList<Location> getLocations(int amountToGenerate, long radiusInMeters) {
 
         ArrayList<Location> locations = new ArrayList<>();
 
-        Location location = new Location("Random");
+        Location location = new Location("InvalidProvider");
         location.setLongitude(80.30278584);
         location.setLatitude(27.69792155);
 

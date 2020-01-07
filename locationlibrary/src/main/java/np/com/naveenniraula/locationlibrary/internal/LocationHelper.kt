@@ -5,6 +5,7 @@ import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
+import np.com.naveenniraula.locationlibrary.data.ReverseGeoCodeModel
 import java.util.concurrent.TimeUnit
 
 class LocationHelper(private val context: Application) {
@@ -42,8 +43,8 @@ class LocationHelper(private val context: Application) {
                 val geoCode = GeoCode(context)
                 geoCode.setReverseGeocodingCompleteListener(object :
                     GeoCode.ReverseGeocodingCompleteListener {
-                    override fun onAddressResolved(address: String, lat: Double, lon: Double) {
-                        Log.d("LocationHelper", "$lat $lon $address")
+                    override fun onOperationComplete(reverseGeoCodeModel: ReverseGeoCodeModel) {
+                        Log.d("LocationHelper", "$reverseGeoCodeModel")
                         locationHelperCallback.onLocationUpdate(locations)
                     }
                 })
