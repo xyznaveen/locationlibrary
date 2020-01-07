@@ -24,14 +24,19 @@ class LocationLibrary {
             return this
         }
 
-        fun withPendingIntent(pendingIntent: PendingIntent): Builder {
+        fun withPendingIntent(): Builder {
+            val pendingIntent = LocationIntentService.getPendingIntent(application)
             this.pendingIntent = pendingIntent
             return this
         }
 
         fun build(): LocationHelper {
             return LocationHelper(application).apply {
-                setLocationHelperCallback(locationHelperCallback)
+                if (::pendingIntent.isInitialized) {
+                    setPendingIntent(pendingIntent)
+                } else {
+                    setLocationHelperCallback(locationHelperCallback)
+                }
             }
         }
 
@@ -53,7 +58,10 @@ class LocationLibrary {
                     val currentPair = toBeReverseGeocoded[currentIndex]
                     currentPair.second.onGeoCodeComplete(reverseGeoCodeModel)
 
-                    Log.d("ReverseGeocoder", "we have result for $currentIndex $reverseGeoCodeModel")
+                    Log.d(
+                        "ReverseGeocoder",
+                        "we have result for $currentIndex $reverseGeoCodeModel"
+                    )
 
                     ++currentIndex
                     doResolve()

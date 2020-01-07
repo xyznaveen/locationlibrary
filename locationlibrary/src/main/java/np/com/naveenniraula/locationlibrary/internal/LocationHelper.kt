@@ -1,16 +1,19 @@
 package np.com.naveenniraula.locationlibrary.internal
 
 import android.app.Application
+import android.app.PendingIntent
 import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
 import np.com.naveenniraula.locationlibrary.callbacks.LocationHelperCallback
 import np.com.naveenniraula.locationlibrary.data.ReverseGeoCodeModel
+import np.com.naveenniraula.locationlibrary.util.LogUtil
 import java.util.concurrent.TimeUnit
 
 class LocationHelper(private val context: Application) {
 
     private lateinit var locationHelperCallback: LocationHelperCallback
+    private lateinit var pendingIntent: PendingIntent
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
@@ -76,27 +79,40 @@ class LocationHelper(private val context: Application) {
 
     fun start() {
 
-        if (!::locationHelperCallback.isInitialized) {
-            Log.e("LocationHelper", "Listener has not been initialized.")
-            return
+//        if (!::locationHelperCallback.isInitialized) {
+//            Log.e("LocationHelper", "Listener has not been initialized.")
+//            return
+//        }
+
+        if (::pendingIntent.isInitialized) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, pendingIntent)
+            LogUtil.i("LocationHelper", "we have ::pendingIntent.isInitialized -> true")
+        } else {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
         }
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
-
-        locationHelperCallback.onStart()
+        // locationHelperCallback.onStart()
     }
 
     fun stop() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+        if (::pendingIntent.isInitialized) {
+            fusedLocationClient.removeLocationUpdates(pendingIntent)
+        } else {
+            fusedLocationClient.removeLocationUpdates(locationCallback)
+        }
         locationHelperCallback.onStop()
     }
 
     fun setLocationHelperCallback(locationHelperCallback: LocationHelperCallback) {
         this.locationHelperCallback = locationHelperCallback
+    }
+
+    fun setPendingIntent(pendingIntent: PendingIntent) {
+        this.pendingIntent = pendingIntent
     }
 
 }

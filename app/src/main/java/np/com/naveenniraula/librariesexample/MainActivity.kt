@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun doWhatIsRequired() {
-
         LocationLibrary.Builder(application)
             .withLocationHelperCallback(object : LocationHelperCallback {
                 override fun onStart() {
@@ -83,7 +82,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     Timber.d("location is not available.")
                 }
 
-            }).build().start()
+            })
+            .withPendingIntent()
+            .build().start()
 
         val reverseGeocodingCompleteCallback = object : ReverseGeoCodeCompleteCallback {
             override fun onGeoCodeComplete(reverseGeoCodeModel: ReverseGeoCodeModel) {
