@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import np.com.naveenniraula.locationlibrary.util.StringUtil
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
@@ -75,6 +76,13 @@ class GeoCode(private val context: Context) {
                     lat,
                     lon
                 )
+            } catch (e: IllegalArgumentException) {
+                e.printStackTrace()
+                reverseGeocodingCompleteListener?.onAddressResolved(
+                    NOT_AVAILABLE,
+                    lat,
+                    lon
+                )
             }
 
             // stop this
@@ -100,7 +108,7 @@ class GeoCode(private val context: Context) {
             sb.append(it.substringBeforeLast(delim))
         }
 
-        return sb.toString()
+        return StringUtil.trimComma(sb.toString())
     }
 
     private fun isNotNull(str: String?): Boolean {
